@@ -1,13 +1,9 @@
-import { INITIAL_CARDS_COUNT } from "@/constants"
+import { Card, createGameCards } from "./Card"
 import { createPlayer, Player, PlayerUtils } from "./Player"
-
-// interface Player {
-//   id: string
-//   cards: unknown[]
-// }
 
 interface GameState {
   players: Player[]
+  deck: Card[]
 }
 
 interface MonopolyGameOptions {
@@ -18,11 +14,14 @@ class MonopolyGame {
   private _gameState: GameState
 
   constructor(options: MonopolyGameOptions) {
+    const deckOfCards = createGameCards()
+
     this._gameState = {
       players: Array.from({ length: options.numOfPlayers }, (_, i) => {
         const playerId = (i + 1).toString()
-        return createPlayer(playerId)
+        return createPlayer(playerId, deckOfCards)
       }),
+      deck: deckOfCards,
     }
   }
   getGameState() {

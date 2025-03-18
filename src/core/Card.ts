@@ -160,4 +160,4 @@ const PropertyCards = {
   RedYellow2: "RedYellow2",
 }
 
-export { createGameCards, CardType, CardUtils }
+export { createGameCards, CardType, CardUtils, Card }
