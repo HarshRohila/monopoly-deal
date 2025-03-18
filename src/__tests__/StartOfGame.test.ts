@@ -7,7 +7,6 @@ describe("Start of game", () => {
     const game = new MonopolyGame({ numOfPlayers: 2 })
 
     const gameState = game.getGameState()
-    console.log(gameState)
 
     gameState.players.forEach((player) => {
       expect(player.cards.length).toBe(INITIAL_CARDS_COUNT)
