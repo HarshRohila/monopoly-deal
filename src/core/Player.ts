@@ -1,6 +1,7 @@
 import { INITIAL_CARDS_COUNT } from "@/constants"
 import { Card } from "./Card"
 import { genRandomNumBetween } from "./utils"
+import { Subject } from "@/utils/rx"
 
 interface Player {
   id: string
@@ -19,24 +20,31 @@ class PlayerUtils {
   getPlayer() {
     return this.player
   }
+
+  drawCards(drawCount: number, deck: Card[]) {
+    for (let i = 0; i < drawCount; i++) {
+      const idx = genRandomNumBetween(0, deck.length - 1)
+      const removedCards = deck.splice(idx, 1)
+      this.addPlayerCards(removedCards)
+    }
+  }
+
+  private addPlayerCards(cards: Card[]) {
+    this.player.cards.push(...cards)
+  }
+
+  drawCards$ = new Subject<void>()
 }
 
 function createPlayer(id: string, deck: Card[]): Player {
-  const playerCards = getRandomCards(deck)
-
-  return {
+  const player = {
     id,
-    cards: playerCards,
+    cards: [],
   }
+
+  new PlayerUtils(player).drawCards(5, deck)
+
+  return player
 }
 
 export { PlayerUtils, createPlayer, Player }
-function getRandomCards(deck: Card[]) {
-  const playerCards = []
-  for (let i = 0; i < INITIAL_CARDS_COUNT; i++) {
-    const idx = genRandomNumBetween(0, deck.length - 1)
-    const removedCards = deck.splice(idx, 1)
-    playerCards.push(...removedCards)
-  }
-  return playerCards
-}

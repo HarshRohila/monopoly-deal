@@ -1,3 +1,4 @@
+import { take } from "@/utils/rx"
 import { Card, createGameCards } from "./Card"
 import { createPlayer, Player, PlayerUtils } from "./Player"
 
@@ -23,13 +24,25 @@ class MonopolyGame {
       }),
       deck: deckOfCards,
     }
+
+    const currentPlayer = this.getCurrentTurnPlayer()
+    currentPlayer.drawCards$.pipe(take(1)).subscribe(() => {
+      currentPlayer.drawCards(2, this._gameState.deck)
+    })
   }
   getGameState() {
     return this._gameState
   }
-  getNextTurnPlayer(): PlayerUtils {
+
+  private _currentPlayerUtils: PlayerUtils
+  getCurrentTurnPlayer(): PlayerUtils {
+    if (this._currentPlayerUtils) {
+      return this._currentPlayerUtils
+    }
+
     const player = this._gameState.players[0]
-    return new PlayerUtils(player)
+    this._currentPlayerUtils = new PlayerUtils(player)
+    return this._currentPlayerUtils
   }
 }
 
