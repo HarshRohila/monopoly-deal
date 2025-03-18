@@ -12,6 +12,23 @@ enum CardType {
   GoPass = "GoPass",
 
   Property = "Property",
+  MultiColorRent = "MultiColorRent",
+  PurpleOrangeRent = "PurpleOrangeRent",
+  BlackMintRent = "BlackMintRent",
+  BlueGreenRent = "BlueGreenRent",
+  LightBlueBrownRent = "LightBlueBrownRent",
+  RedYellowRent = "RedYellowRent",
+  PinkOrangeRent = "PinkOrangeRent",
+
+  // money cards
+  _10_M = "10_M",
+  _1_M = "1_M",
+  _2_M = "2_M",
+  _3_M = "3_M",
+  _4_M = "4_M",
+  _5_M = "5_M",
+
+  WildProperty = "WildProperty",
 }
 
 interface Card {
@@ -35,8 +52,8 @@ function createGameCards() {
   createCards(2, CardType.DealBreaker)
   createCards(3, CardType.DebtCollector)
   createCards(2, CardType.DoubleRent)
-  createCards(4, CardType.ForcedDeal)
-  createCards(3, CardType.Hotel)
+  createCards(3, CardType.ForcedDeal)
+  createCards(2, CardType.Hotel)
   createCards(3, CardType.House)
   createCards(3, CardType.Birthday)
   createCards(3, CardType.JustSayNo)
@@ -46,6 +63,22 @@ function createGameCards() {
   CardUtils.createPropertyCards().forEach((card) => {
     cards.push(card)
   })
+
+  createCards(3, CardType.MultiColorRent)
+  createCards(2, CardType.PurpleOrangeRent)
+  createCards(2, CardType.BlackMintRent)
+  createCards(2, CardType.BlueGreenRent)
+  createCards(2, CardType.LightBlueBrownRent)
+  createCards(2, CardType.PinkOrangeRent)
+
+  createCards(1, CardType._10_M)
+  createCards(2, CardType._5_M)
+  createCards(3, CardType._4_M)
+  createCards(3, CardType._3_M)
+  createCards(5, CardType._2_M)
+  createCards(6, CardType._1_M)
+
+  createCards(2, CardType.WildProperty)
 
   return cards
 }
@@ -63,6 +96,27 @@ class CardUtils {
     return Object.keys(PropertyCards).map((value) => {
       return { id: value, type: CardType.Property }
     })
+  }
+
+  constructor(private card: Card) {}
+
+  isActionCard() {
+    return (
+      this.card.type !== CardType.WildProperty &&
+      this.card.type !== CardType.Property &&
+      !this.isColorRentCard() &&
+      !this.isMoneyCard()
+    )
+  }
+
+  isColorRentCard() {
+    return (
+      this.card.type.endsWith("Rent") && this.card.type !== CardType.DoubleRent
+    )
+  }
+
+  isMoneyCard() {
+    return this.card.type.split("_")[1] === "M"
   }
 }
 
@@ -106,4 +160,4 @@ const PropertyCards = {
   RedYellow2: "RedYellow2",
 }
 
-export { createGameCards, CardType }
+export { createGameCards, CardType, CardUtils }
