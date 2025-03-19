@@ -1,14 +1,30 @@
-import { take } from "@/utils/rx"
 import { Card, createGameCards } from "./Card"
-import { createPlayer, Player, PlayerUtils } from "./Player"
+import { createPlayer, Player } from "./Player"
+import { PlayerActions } from "./player/PlayerActions"
+import { MAX_CARDS_TO_PLAY_IN_ONE_TURN } from "@/constants"
+
+interface CurrrentPlayerState {
+  playerId: string
+  hasDrawnCards: boolean
+  remainingCardsToPlay: number
+}
 
 interface GameState {
   players: Player[]
   deck: Card[]
+  currentPlayer: CurrrentPlayerState
 }
 
 interface MonopolyGameOptions {
   numOfPlayers: number
+}
+
+function newCurrentPlayerState(playerId: string): CurrrentPlayerState {
+  return {
+    playerId,
+    hasDrawnCards: false,
+    remainingCardsToPlay: MAX_CARDS_TO_PLAY_IN_ONE_TURN,
+  }
 }
 
 class MonopolyGame {
@@ -17,33 +33,24 @@ class MonopolyGame {
   constructor(options: MonopolyGameOptions) {
     const deckOfCards = createGameCards()
 
-    this._gameState = {
-      players: Array.from({ length: options.numOfPlayers }, (_, i) => {
-        const playerId = (i + 1).toString()
-        return createPlayer(playerId, deckOfCards)
-      }),
-      deck: deckOfCards,
-    }
-
-    const currentPlayer = this.getCurrentTurnPlayer()
-    currentPlayer.drawCards$.pipe(take(1)).subscribe(() => {
-      currentPlayer.drawCards(2, this._gameState.deck)
+    const players = Array.from({ length: options.numOfPlayers }, (_, i) => {
+      const playerId = (i + 1).toString()
+      return createPlayer(playerId, deckOfCards)
     })
+
+    this._gameState = {
+      players,
+      deck: deckOfCards,
+      currentPlayer: newCurrentPlayerState(players[0].id),
+    }
   }
   getGameState() {
     return this._gameState
   }
 
-  private _currentPlayerUtils: PlayerUtils
-  getCurrentTurnPlayer(): PlayerUtils {
-    if (this._currentPlayerUtils) {
-      return this._currentPlayerUtils
-    }
-
-    const player = this._gameState.players[0]
-    this._currentPlayerUtils = new PlayerUtils(player)
-    return this._currentPlayerUtils
+  getCurrentPlayerActions() {
+    return new PlayerActions(this._gameState)
   }
 }
 
-export { MonopolyGame }
+export { MonopolyGame, GameState }

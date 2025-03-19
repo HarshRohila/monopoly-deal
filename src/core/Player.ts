@@ -1,4 +1,4 @@
-import { INITIAL_CARDS_COUNT } from "@/constants"
+import { MAX_CARDS_TO_PLAY_IN_ONE_TURN } from "@/constants"
 import { Card } from "./Card"
 import { genRandomNumBetween } from "./utils"
 import { Subject } from "@/utils/rx"
@@ -40,6 +40,7 @@ function createPlayer(id: string, deck: Card[]): Player {
   const player = {
     id,
     cards: [],
+    remainingCardsToPlay: MAX_CARDS_TO_PLAY_IN_ONE_TURN,
   }
 
   new PlayerUtils(player).drawCards(5, deck)

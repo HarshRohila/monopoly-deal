@@ -1,5 +1,5 @@
 import { INITIAL_CARDS_COUNT } from "@/constants"
-import { MonopolyGame } from "@/core"
+import { GameState, MonopolyGame } from "@/core"
 import { take } from "@/utils/rx"
 import { describe, expect, test } from "bun:test"
 
@@ -20,7 +20,7 @@ describe("Start of game", () => {
     expect(gameState.deck.length).toBe(expectedRemainingDeckCardsCount)
   })
 
-  test("player can draw cards", (done) => {
+  test("player can draw cards", () => {
     const numOfPlayers = 2
     const game = new MonopolyGame({ numOfPlayers })
 
@@ -30,16 +30,15 @@ describe("Start of game", () => {
       expect(player.cards.length).toBe(INITIAL_CARDS_COUNT)
     })
 
-    const player = game.getCurrentTurnPlayer()
+    const playerActions = game.getCurrentPlayerActions()
+    playerActions.drawCards()
+    const currentPlayerId = playerActions.playerId
+    const cards = getCardsByPlayerId(gameState, currentPlayerId)
 
-    player.drawCards$.pipe(take(1)).subscribe(() => {
-      try {
-        expect(player.getPlayer().cards.length).toBe(7)
-        done()
-      } catch (err) {
-        done(err)
-      }
-    })
-    player.drawCards$.next()
+    expect(cards.length).toBe(7)
   })
 })
+
+function getCardsByPlayerId(gameState: GameState, playerId: string) {
+  return gameState.players.find((player) => player.id === playerId)?.cards
+}
