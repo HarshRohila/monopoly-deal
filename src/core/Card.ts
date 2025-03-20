@@ -31,12 +31,32 @@ enum CardType {
   WildProperty = "WildProperty",
 }
 
+interface CardMeta {
+  colors?: PropertyColor[]
+}
+
 interface Card {
   id: string
   type: CardType
+  meta?: CardMeta
 
   /** typeId will be same for each 1M card, and each 5M card */
   // typeId: string
+}
+
+enum PropertyColor {
+  Brown = "Brown",
+  LightBlue = "LightBlue",
+  Pink = "Pink",
+  Red = "Red",
+  Blue = "Blue",
+  Green = "Green",
+  Orange = "Orange",
+  Purple = "Purple",
+  Black = "Black",
+  White = "White",
+  Yellow = "Yellow",
+  Mint = "Mint",
 }
 
 function createGameCards() {
@@ -93,8 +113,8 @@ class CardUtils {
   }
 
   public static createPropertyCards(): Card[] {
-    return Object.keys(PropertyCards).map((value) => {
-      return { id: value, type: CardType.Property }
+    return Object.keys(PropertyCards).map(() => {
+      return CardUtils.createCardFromType(CardType.Property)
     })
   }
 
@@ -120,44 +140,44 @@ class CardUtils {
   }
 }
 
-const PropertyCards = {
-  Brown1: "Brown1",
-  Brown2: "Brown2",
-  Blue1: "Blue1",
-  Blue2: "Blue2",
-  Green1: "Green1",
-  Green2: "Green2",
-  Green3: "Green3",
-  LightBlue1: "LightBlue1",
-  LightBlue2: "LightBlue2",
-  LightBlue3: "LightBlue3",
-  Orange1: "Orange1",
-  Orange2: "Orange2",
-  Orange3: "Orange3",
-  Purple1: "Purple1",
-  Purple2: "Purple2",
-  Purple3: "Purple3",
-  Red1: "Red1",
-  Red2: "Red2",
-  Red3: "Red3",
-  Yellow1: "Yellow1",
-  Yellow2: "Yellow2",
-  Yellow3: "Yellow3",
-  Black1: "Black1",
-  Black2: "Black2",
-  Black3: "Black3",
-  Black4: "Black4",
-  Mint1: "Mint1",
-  Mint2: "Mint2",
-  BlueGreen: "BlueGreen",
-  LightBlueBrown: "LightBlueBrown",
-  PinkOrange1: "PinkOrange1",
-  PinkOrange2: "PinkOrange2",
-  BlackGreen: "BlackGreen",
-  BlackLightBlue: "BlackLightBlue",
-  BlackMint: "BlackMint",
-  RedYellow1: "RedYellow1",
-  RedYellow2: "RedYellow2",
+const PropertyCards: Record<string, unknown> = {
+  Brown1: { colors: [PropertyColor.Brown] },
+  Brown2: { colors: [PropertyColor.Brown] },
+  Blue1: { colors: [PropertyColor.Blue] },
+  Blue2: { colors: [PropertyColor.Blue] },
+  Green1: { colors: [PropertyColor.Green] },
+  Green2: { colors: [PropertyColor.Green] },
+  Green3: { colors: [PropertyColor.Green] },
+  LightBlue1: { colors: [PropertyColor.LightBlue] },
+  LightBlue2: { colors: [PropertyColor.LightBlue] },
+  LightBlue3: { colors: [PropertyColor.LightBlue] },
+  Orange1: { colors: [PropertyColor.Orange] },
+  Orange2: { colors: [PropertyColor.Orange] },
+  Orange3: { colors: [PropertyColor.Orange] },
+  Purple1: { colors: [PropertyColor.Purple] },
+  Purple2: { colors: [PropertyColor.Purple] },
+  Purple3: { colors: [PropertyColor.Purple] },
+  Red1: { colors: [PropertyColor.Red] },
+  Red2: { colors: [PropertyColor.Red] },
+  Red3: { colors: [PropertyColor.Red] },
+  Yellow1: { colors: [PropertyColor.Yellow] },
+  Yellow2: { colors: [PropertyColor.Yellow] },
+  Yellow3: { colors: [PropertyColor.Yellow] },
+  Black1: { colors: [PropertyColor.Black] },
+  Black2: { colors: [PropertyColor.Black] },
+  Black3: { colors: [PropertyColor.Black] },
+  Black4: { colors: [PropertyColor.Black] },
+  Mint1: { colors: [PropertyColor.Mint] },
+  Mint2: { colors: [PropertyColor.Mint] },
+  BlueGreen: { colors: [PropertyColor.Blue, PropertyColor.Green] },
+  LightBlueBrown: { colors: [PropertyColor.LightBlue, PropertyColor.Brown] },
+  PinkOrange1: { colors: [PropertyColor.Pink, PropertyColor.Orange] },
+  PinkOrange2: { colors: [PropertyColor.Pink, PropertyColor.Orange] },
+  BlackGreen: { colors: [PropertyColor.Black, PropertyColor.Green] },
+  BlackLightBlue: { colors: [PropertyColor.Black, PropertyColor.LightBlue] },
+  BlackMint: { colors: [PropertyColor.Black, PropertyColor.Mint] },
+  RedYellow1: { colors: [PropertyColor.Red, PropertyColor.Yellow] },
+  RedYellow2: { colors: [PropertyColor.Red, PropertyColor.Yellow] },
 }
 
-export { createGameCards, CardType, CardUtils, Card }
+export { createGameCards, CardType, CardUtils, Card, PropertyColor }

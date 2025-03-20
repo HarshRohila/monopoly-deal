@@ -1,11 +1,14 @@
-import { MAX_CARDS_TO_PLAY_IN_ONE_TURN } from "@/constants"
-import { Card } from "./Card"
+import { Card, PropertyColor } from "./Card"
 import { genRandomNumBetween } from "./utils"
 import { Subject } from "@/utils/rx"
+
+type PropertyCards = Record<PropertyColor, Card[]>
 
 interface Player {
   id: string
   cards: Card[]
+  moneyCards: Card[]
+  propertyCards: PropertyCards
 }
 
 class PlayerUtils {
@@ -37,10 +40,11 @@ class PlayerUtils {
 }
 
 function createPlayer(id: string, deck: Card[]): Player {
-  const player = {
+  const player: Player = {
     id,
     cards: [],
-    remainingCardsToPlay: MAX_CARDS_TO_PLAY_IN_ONE_TURN,
+    moneyCards: [],
+    propertyCards: {} as PropertyCards,
   }
 
   new PlayerUtils(player).drawCards(5, deck)

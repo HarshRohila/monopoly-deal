@@ -1,3 +1,4 @@
+import { CardUtils, PropertyColor } from "../Card"
 import { GameState } from "../MonopolyGame"
 import { PlayerUtils } from "../Player"
 
@@ -21,12 +22,26 @@ class PlayerActions {
 
     const player = this.getPlayer()
     const playerUtils = new PlayerUtils(player)
-    playerUtils.drawCards(2, this.gameState.deck)
+    const drawCount = player.cards.length === 0 ? 5 : 2
+    playerUtils.drawCards(drawCount, this.gameState.deck)
   }
-  playCard(cardId: string) {
+  playCard(cardIndex: number, options?: CardPlayOptions) {
+    const player = this.getPlayer()
+    const card = player.cards[cardIndex]
+    const cardUtils = new CardUtils(card)
+
+    if (cardUtils.isMoneyCard()) {
+      player.moneyCards.push(card)
+    }
+
+    player.cards.splice(cardIndex, 1)
     this.currentPlayerState.remainingCardsToPlay -= 1
   }
   endTurn() {}
+}
+
+interface CardPlayOptions {
+  colorGroup?: PropertyColor
 }
 
 export { PlayerActions }
