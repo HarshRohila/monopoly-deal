@@ -1,6 +1,8 @@
 import { CardUtils, PropertyColor } from "../Card"
+import { PropertyCard } from "../card/card-types/PropertyCard"
 import { GameState } from "../MonopolyGame"
 import { PlayerUtils } from "../Player"
+import { CardPlayOptions } from "../types"
 
 class PlayerActions {
   constructor(private gameState: GameState) {}
@@ -32,16 +34,14 @@ class PlayerActions {
 
     if (cardUtils.isMoneyCard()) {
       player.moneyCards.push(card)
+      player.cards.splice(cardIndex, 1)
+    } else if (cardUtils.isPropertyCard()) {
+      new PropertyCard(card, this.gameState).playCard(options)
     }
 
-    player.cards.splice(cardIndex, 1)
     this.currentPlayerState.remainingCardsToPlay -= 1
   }
   endTurn() {}
-}
-
-interface CardPlayOptions {
-  colorGroup?: PropertyColor
 }
 
 export { PlayerActions }

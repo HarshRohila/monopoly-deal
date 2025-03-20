@@ -1,6 +1,6 @@
 import { INITIAL_CARDS_COUNT } from "@/constants"
 import { GameState, MonopolyGame } from "@/core"
-import { CardType } from "@/core/Card"
+import { CardType, PropertyColor } from "@/core/Card"
 import { describe, expect, test } from "bun:test"
 
 describe("Start of game", () => {
@@ -56,7 +56,7 @@ describe("Start of game", () => {
     expect(cards.length).toBe(5)
   })
 
-  test("playCard adds card to player's moneyCards if played card is a money card", () => {
+  test("when player plays a money card, it adds the card to player's moneyCards", () => {
     const numOfPlayers = 2
     const game = new MonopolyGame({ numOfPlayers })
 
@@ -72,6 +72,54 @@ describe("Start of game", () => {
     expect(currentPlayer.moneyCards.length).toBe(1)
     expect(currentPlayer.moneyCards[0].type).toBe(CardType._1_M)
     expect(currentPlayer.cards.length).toBe(0)
+  })
+
+  test("when player plays a property card, it adds the card to player's propertyCards", () => {
+    const numOfPlayers = 2
+    const game = new MonopolyGame({ numOfPlayers })
+
+    const gameState = game.getGameState()
+
+    // Set the current player's cards to a property card
+    const currentPlayer = gameState.players[0]
+    currentPlayer.cards = [
+      {
+        id: "1",
+        type: CardType.Property,
+        meta: { colors: [PropertyColor.Red] },
+      },
+    ]
+
+    const playerActions = game.getCurrentPlayerActions()
+    playerActions.playCard(0)
+
+    expect(currentPlayer.propertyCards[PropertyColor.Red].length).toBe(1)
+    expect(currentPlayer.cards.length).toBe(0)
+    expect(gameState.currentPlayer.remainingCardsToPlay).toBe(2)
+  })
+
+  test("when player plays a wild property card, it adds the card to player's propertyCards", () => {
+    const numOfPlayers = 2
+    const game = new MonopolyGame({ numOfPlayers })
+
+    const gameState = game.getGameState()
+
+    // Set the current player's cards to a wild property card
+    const currentPlayer = gameState.players[0]
+    currentPlayer.cards = [
+      {
+        id: "1",
+        type: CardType.Property,
+        meta: { colors: [PropertyColor.Red, PropertyColor.Yellow] },
+      },
+    ]
+
+    const playerActions = game.getCurrentPlayerActions()
+    playerActions.playCard(0, { colorGroup: PropertyColor.Yellow })
+
+    expect(currentPlayer.propertyCards[PropertyColor.Yellow].length).toBe(1)
+    expect(currentPlayer.cards.length).toBe(0)
+    expect(gameState.currentPlayer.remainingCardsToPlay).toBe(2)
   })
 })
 

@@ -1,3 +1,5 @@
+import { PropertyColor } from "./types"
+
 enum CardType {
   // monopoly deal action cards
   DealBreaker = "DealBreaker",
@@ -42,21 +44,6 @@ interface Card {
 
   /** typeId will be same for each 1M card, and each 5M card */
   // typeId: string
-}
-
-enum PropertyColor {
-  Brown = "Brown",
-  LightBlue = "LightBlue",
-  Pink = "Pink",
-  Red = "Red",
-  Blue = "Blue",
-  Green = "Green",
-  Orange = "Orange",
-  Purple = "Purple",
-  Black = "Black",
-  White = "White",
-  Yellow = "Yellow",
-  Mint = "Mint",
 }
 
 function createGameCards() {
@@ -122,10 +109,14 @@ class CardUtils {
 
   isActionCard() {
     return (
-      this.card.type !== CardType.WildProperty &&
-      this.card.type !== CardType.Property &&
-      !this.isColorRentCard() &&
-      !this.isMoneyCard()
+      !this.isPropertyCard() && !this.isColorRentCard() && !this.isMoneyCard()
+    )
+  }
+
+  isPropertyCard() {
+    return (
+      this.card.type === CardType.WildProperty ||
+      this.card.type === CardType.Property
     )
   }
 
