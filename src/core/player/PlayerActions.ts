@@ -1,4 +1,7 @@
-import { CardUtils, PropertyColor } from "../Card"
+import { CardType, CardUtils, PropertyColor } from "../Card"
+import { GoPassCard } from "../card/card-types/GoPassCard"
+import { ICanPlay } from "../card/card-types/ICanPlay"
+import { MoneyCard } from "../card/card-types/MoneyCard"
 import { PropertyCard } from "../card/card-types/PropertyCard"
 import { GameState } from "../MonopolyGame"
 import { PlayerUtils } from "../Player"
@@ -28,19 +31,26 @@ class PlayerActions {
     playerUtils.drawCards(drawCount, this.gameState.deck)
   }
   playCard(cardIndex: number, options?: CardPlayOptions) {
+    const playableCard = this.getPlayableCard(cardIndex)
+
+    playableCard.playCard(options)
+
+    this.currentPlayerState.remainingCardsToPlay -= 1
+  }
+  private getPlayableCard(cardIndex: number): ICanPlay {
     const player = this.getPlayer()
     const card = player.cards[cardIndex]
     const cardUtils = new CardUtils(card)
 
     if (cardUtils.isMoneyCard()) {
-      player.moneyCards.push(card)
-      player.cards.splice(cardIndex, 1)
+      return new MoneyCard(card, this.gameState)
     } else if (cardUtils.isPropertyCard()) {
-      new PropertyCard(card, this.gameState).playCard(options)
+      return new PropertyCard(card, this.gameState)
+    } else if (card.type === CardType.GoPass) {
+      return new GoPassCard(card, this.gameState)
     }
-
-    this.currentPlayerState.remainingCardsToPlay -= 1
   }
+
   endTurn() {}
 }
 

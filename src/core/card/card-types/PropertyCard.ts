@@ -4,6 +4,7 @@ import { ICanPlay } from "./ICanPlay"
 import { CardPlayOptions, PropertyColor } from "@/core/types"
 import { Player } from "@/core/Player"
 import { assert } from "@/core/utils"
+import { GameStateUtils } from "@/core/utils/GameStateUtils"
 
 class PropertyCard implements ICanPlay {
   constructor(private card: Card, private gameState: GameState) {}
@@ -43,7 +44,9 @@ class PropertyCard implements ICanPlay {
   private updateCards(color: PropertyColor) {
     const player = this.getCurrentPlayer()
     this.updatePlayersPropertyCards(player, color)
-    this.removePlayedCardFromHand(player)
+
+    const gameUtils = new GameStateUtils(this.gameState)
+    gameUtils.removeCardFromPlayer(this.card, player)
   }
 
   private getCurrentPlayer() {
@@ -57,10 +60,6 @@ class PropertyCard implements ICanPlay {
       this.card.meta?.colors.length > 1 ||
       this.card.type === CardType.WildProperty
     )
-  }
-
-  private removePlayedCardFromHand(player: Player) {
-    player.cards = player.cards.filter((card) => card.id !== this.card.id)
   }
 
   private updatePlayersPropertyCards(
