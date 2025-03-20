@@ -1,4 +1,4 @@
-import { Card } from "@/core/Card"
+import { Card, CardType } from "@/core/Card"
 import { GameState } from "@/core/MonopolyGame"
 import { ICanPlay } from "./ICanPlay"
 import { CardPlayOptions, PropertyColor } from "@/core/types"
@@ -21,15 +21,23 @@ class PropertyCard implements ICanPlay {
         !!playerIntentedColor,
         "Player need to select color to play a wild property card."
       )
-      assert(
-        this.card?.meta?.colors.includes(playerIntentedColor),
-        "Player selected wrong color for wild property card."
-      )
+
+      if (!this.isAnyColorWildCard) {
+        assert(
+          this.card.meta?.colors.includes(playerIntentedColor),
+          "Player selected wrong color for wild property card."
+        )
+      }
+
       return playerIntentedColor
     } else {
-      const color = this.card.meta.colors[0]
+      const color = this.card.meta?.colors[0]
       return color
     }
+  }
+
+  private get isAnyColorWildCard() {
+    return this.card.type === CardType.WildProperty
   }
 
   private updateCards(color: PropertyColor) {
@@ -45,7 +53,10 @@ class PropertyCard implements ICanPlay {
   }
 
   private isCardAWildPropertyCard() {
-    return this.card.meta.colors.length > 1
+    return (
+      this.card.meta?.colors.length > 1 ||
+      this.card.type === CardType.WildProperty
+    )
   }
 
   private removePlayedCardFromHand(player: Player) {

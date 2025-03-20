@@ -121,6 +121,29 @@ describe("Start of game", () => {
     expect(currentPlayer.cards.length).toBe(0)
     expect(gameState.currentPlayer.remainingCardsToPlay).toBe(2)
   })
+
+  test("when player plays a any-color wild property card, it adds the card to player's propertyCards", () => {
+    const numOfPlayers = 2
+    const game = new MonopolyGame({ numOfPlayers })
+
+    const gameState = game.getGameState()
+
+    // Set the current player's cards to a wild property card
+    const currentPlayer = gameState.players[0]
+    currentPlayer.cards = [
+      {
+        id: "1",
+        type: CardType.WildProperty,
+      },
+    ]
+
+    const playerActions = game.getCurrentPlayerActions()
+    playerActions.playCard(0, { colorGroup: PropertyColor.Yellow })
+
+    expect(currentPlayer.propertyCards[PropertyColor.Yellow].length).toBe(1)
+    expect(currentPlayer.cards.length).toBe(0)
+    expect(gameState.currentPlayer.remainingCardsToPlay).toBe(2)
+  })
 })
 
 function getCardsByPlayerId(gameState: GameState, playerId: string) {
