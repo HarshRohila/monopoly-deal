@@ -13,6 +13,7 @@ interface GameState {
   players: Player[]
   deck: Card[]
   currentPlayer: CurrrentPlayerState
+  discardPile: Card[]
 }
 
 interface MonopolyGameOptions {
@@ -42,6 +43,7 @@ class MonopolyGame {
       players,
       deck: deckOfCards,
       currentPlayer: newCurrentPlayerState(players[0].id),
+      discardPile: [],
     }
   }
   getGameState() {

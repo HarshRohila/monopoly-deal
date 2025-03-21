@@ -144,6 +144,28 @@ describe("Start of game", () => {
     expect(currentPlayer.cards.length).toBe(0)
     expect(gameState.currentPlayer.remainingCardsToPlay).toBe(2)
   })
+
+  test("when player plays a Go Pass card, it adds 2 cards to players hand from the deck and adds the go-pass card in discard pile", () => {
+    const numOfPlayers = 2
+    const game = new MonopolyGame({ numOfPlayers })
+
+    const gameState = game.getGameState()
+
+    // Set the current player's cards to a Go Pass card
+    const currentPlayer = gameState.players[0]
+    currentPlayer.cards = [{ id: "1", type: CardType.GoPass }]
+
+    const playerActions = game.getCurrentPlayerActions()
+
+    const deckSizeBefore = gameState.deck.length
+    playerActions.playCard(0)
+
+    expect(currentPlayer.cards.length).toBe(2)
+    expect(gameState.discardPile.length).toBe(1)
+    expect(gameState.discardPile[0].type).toBe(CardType.GoPass)
+    expect(gameState.currentPlayer.remainingCardsToPlay).toBe(2)
+    expect(gameState.deck.length).toBe(deckSizeBefore - 2)
+  })
 })
 
 function getCardsByPlayerId(gameState: GameState, playerId: string) {
