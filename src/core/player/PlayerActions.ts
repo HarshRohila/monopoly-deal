@@ -1,8 +1,11 @@
 import { CardType, CardUtils, PropertyColor } from "../Card"
-import { GoPassCard } from "../card/card-types/GoPassCard"
-import { ICanPlay } from "../card/card-types/ICanPlay"
-import { MoneyCard } from "../card/card-types/MoneyCard"
-import { PropertyCard } from "../card/card-types/PropertyCard"
+import {
+  ICanPlay,
+  PropertyCard,
+  HotelCard,
+  GoPassCard,
+  MoneyCard,
+} from "../card/card-types"
 import { GameState } from "../MonopolyGame"
 import { PlayerUtils } from "../Player"
 import { CardPlayOptions } from "../types"
@@ -48,6 +51,8 @@ class PlayerActions {
       return new PropertyCard(card, this.gameState)
     } else if (card.type === CardType.GoPass) {
       return new GoPassCard(card, this.gameState)
+    } else if (card.type === CardType.Hotel) {
+      return new HotelCard(card, this.gameState)
     }
   }
 

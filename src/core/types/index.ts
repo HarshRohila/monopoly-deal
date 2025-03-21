@@ -1,5 +1,8 @@
+import { CardMetaType } from "../Card"
+
 interface CardPlayOptions {
   colorGroup?: PropertyColor
+  type?: CardMetaType
 }
 
 enum PropertyColor {

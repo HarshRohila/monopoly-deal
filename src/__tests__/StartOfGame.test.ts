@@ -1,6 +1,6 @@
 import { INITIAL_CARDS_COUNT } from "@/constants"
 import { GameState, MonopolyGame } from "@/core"
-import { CardType, PropertyColor } from "@/core/Card"
+import { CardMetaType, CardType, PropertyColor } from "@/core/Card"
 import { describe, expect, test } from "bun:test"
 
 describe("Start of game", () => {
@@ -165,6 +165,27 @@ describe("Start of game", () => {
     expect(gameState.discardPile[0].type).toBe(CardType.GoPass)
     expect(gameState.currentPlayer.remainingCardsToPlay).toBe(2)
     expect(gameState.deck.length).toBe(deckSizeBefore - 2)
+  })
+
+  test("when player plays a Hotel card as money card, it adds the card to player's moneyCards, also changes the type of card to money", () => {
+    const numOfPlayers = 2
+    const game = new MonopolyGame({ numOfPlayers })
+
+    const gameState = game.getGameState()
+
+    // Set the current player's cards to a Hotel card
+    const currentPlayer = gameState.players[0]
+    currentPlayer.cards = [{ id: "1", type: CardType.Hotel }]
+
+    const playerActions = game.getCurrentPlayerActions()
+
+    playerActions.playCard(0, { type: CardMetaType.Money })
+
+    expect(currentPlayer.moneyCards.length).toBe(1)
+    expect(currentPlayer.cards.length).toBe(0)
+    expect(gameState.currentPlayer.remainingCardsToPlay).toBe(2)
+    expect(currentPlayer.moneyCards[0].type).toBe(CardType.Hotel)
+    expect(currentPlayer.moneyCards[0].meta.type).toBe(CardMetaType.Money)
   })
 })
 

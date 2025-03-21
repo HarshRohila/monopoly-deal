@@ -33,8 +33,15 @@ enum CardType {
   WildProperty = "WildProperty",
 }
 
+enum CardMetaType {
+  Action = "Action",
+  Money = "Money",
+}
+
 interface CardMeta {
   colors?: PropertyColor[]
+  value?: number
+  type?: CardMetaType
 }
 
 interface Card {
@@ -49,7 +56,7 @@ interface Card {
 function createGameCards() {
   const cards = []
 
-  function createCards(count: number, type: CardType) {
+  function createCards(count: number, type: CardType, meta: CardMeta = {}) {
     Array.from({ length: count }).forEach(() => {
       const card = CardUtils.createCardFromType(type)
       cards.push(card)
@@ -60,8 +67,8 @@ function createGameCards() {
   createCards(3, CardType.DebtCollector)
   createCards(2, CardType.DoubleRent)
   createCards(3, CardType.ForcedDeal)
-  createCards(2, CardType.Hotel)
-  createCards(3, CardType.House)
+  createCards(2, CardType.Hotel, { value: 4, type: CardMetaType.Action })
+  createCards(3, CardType.House, { value: 3, type: CardMetaType.Action })
   createCards(3, CardType.Birthday)
   createCards(3, CardType.JustSayNo)
   createCards(3, CardType.SlyDeal)
@@ -93,10 +100,10 @@ function createGameCards() {
 class CardUtils {
   private static cardCount = 0
 
-  public static createCardFromType(type: CardType): Card {
+  public static createCardFromType(type: CardType, meta: CardMeta = {}): Card {
     CardUtils.cardCount++
 
-    return { id: CardUtils.cardCount.toString(), type }
+    return { id: CardUtils.cardCount.toString(), type, meta }
   }
 
   public static createPropertyCards(): Card[] {
@@ -171,4 +178,11 @@ const PropertyCards: Record<string, unknown> = {
   RedYellow2: { colors: [PropertyColor.Red, PropertyColor.Yellow] },
 }
 
-export { createGameCards, CardType, CardUtils, Card, PropertyColor }
+export {
+  createGameCards,
+  CardType,
+  CardUtils,
+  Card,
+  PropertyColor,
+  CardMetaType,
+}
