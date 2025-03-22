@@ -1,10 +1,12 @@
-import { Card, CardType, CardUtils, PropertyColor } from "../Card"
+import { Card, CardMetaType, CardType, CardUtils } from "../Card"
 import {
   ICanPlay,
   PropertyCard,
   HotelCard,
   GoPassCard,
   MoneyCard,
+  ActionAsMoneyCard,
+  HouseCard,
 } from "../card/card-types"
 import { GameState } from "../MonopolyGame"
 import { PlayerUtils } from "../Player"
@@ -43,23 +45,30 @@ class PlayerActions {
 
     this.gameStateUtils.removeCardFromPlayer(card, this.getPlayer())
 
-    const playableCard = this.getPlayableCard(card)
+    const playableCard = this.getPlayableCard(card, options)
 
     playableCard.playCard(options)
 
     this.currentPlayerState.remainingCardsToPlay -= 1
   }
-  private getPlayableCard(card: Card): ICanPlay {
+  private getPlayableCard(card: Card, options?: CardPlayOptions): ICanPlay {
     const cardUtils = new CardUtils(card)
 
     if (cardUtils.isMoneyCard()) {
       return new MoneyCard(card, this.gameState)
     } else if (cardUtils.isPropertyCard()) {
       return new PropertyCard(card, this.gameState)
+    } else if (
+      cardUtils.isActionCard() &&
+      options?.type === CardMetaType.Money
+    ) {
+      return new ActionAsMoneyCard(card, this.gameState)
     } else if (card.type === CardType.GoPass) {
       return new GoPassCard(card, this.gameState)
     } else if (card.type === CardType.Hotel) {
       return new HotelCard(card, this.gameState)
+    } else if (card.type === CardType.House) {
+      return new HouseCard(card, this.gameState)
     }
   }
 

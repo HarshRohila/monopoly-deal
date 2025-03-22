@@ -4,7 +4,7 @@ import { Card, CardMetaType } from "@/core/Card"
 import { GameState } from "@/core/MonopolyGame"
 import { GameStateUtils } from "@/core/utils/GameStateUtils"
 
-class HotelCard implements ICanPlay {
+class HouseCard implements ICanPlay {
   private gameStateUtils: GameStateUtils
   constructor(private card: Card, private gameState: GameState) {
     this.gameStateUtils = new GameStateUtils(gameState)
@@ -12,4 +12,4 @@ class HotelCard implements ICanPlay {
   playCard(options: CardPlayOptions): void {}
 }
 
-export { HotelCard }
+export { HouseCard }

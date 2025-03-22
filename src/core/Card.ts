@@ -72,7 +72,7 @@ function createGameCards() {
   createCards(3, CardType.Birthday)
   createCards(3, CardType.JustSayNo)
   createCards(3, CardType.SlyDeal)
-  createCards(10, CardType.GoPass)
+  createCards(10, CardType.GoPass, { value: 1 })
 
   CardUtils.createPropertyCards().forEach((card) => {
     cards.push(card)
