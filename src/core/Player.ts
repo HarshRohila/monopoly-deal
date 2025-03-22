@@ -16,10 +16,6 @@ class PlayerUtils {
     // this.cards = Array.from({ length: INITIAL_CARDS_COUNT }, (_, i) => ({}))
   }
 
-  play() {
-    console.log("Player is playing")
-  }
-
   getPlayer() {
     return this.player
   }

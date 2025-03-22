@@ -7,6 +7,7 @@ import {
   MoneyCard,
   ActionAsMoneyCard,
   HouseCard,
+  BirthdayCard,
 } from "../card/card-types"
 import { GameState } from "../MonopolyGame"
 import { PlayerUtils } from "../Player"
@@ -69,6 +70,8 @@ class PlayerActions {
       return new HotelCard(card, this.gameState)
     } else if (card.type === CardType.House) {
       return new HouseCard(card, this.gameState)
+    } else if (card.type === CardType.Birthday) {
+      return new BirthdayCard(card, this.gameState)
     }
   }
 

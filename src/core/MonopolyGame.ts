@@ -1,12 +1,18 @@
-import { Card, createGameCards } from "./Card"
+import { Card, CardType, createGameCards } from "./Card"
 import { createPlayer, Player } from "./Player"
 import { PlayerActions } from "./player/PlayerActions"
 import { MAX_CARDS_TO_PLAY_IN_ONE_TURN } from "@/constants"
+import { PlayerActionsToHandleCardAction } from "./player/PlayerActionsToHandleCardAction"
 
+interface PlayerAction {
+  type: CardType
+  playerIds: string[]
+}
 interface CurrrentPlayerState {
   playerId: string
   hasDrawnCards: boolean
   remainingCardsToPlay: number
+  action: PlayerAction | null
 }
 
 interface GameState {
@@ -25,6 +31,7 @@ function newCurrentPlayerState(playerId: string): CurrrentPlayerState {
     playerId,
     hasDrawnCards: false,
     remainingCardsToPlay: MAX_CARDS_TO_PLAY_IN_ONE_TURN,
+    actionedPlayerIds: {},
   }
 }
 
@@ -52,6 +59,18 @@ class MonopolyGame {
 
   getCurrentPlayerActions() {
     return new PlayerActions(this._gameState)
+  }
+
+  getActionedPlayersActions(): PlayerActionsToHandleCardAction[] {
+    const action = this._gameState.currentPlayer.action
+
+    return action.playerIds.map((playerId) => {
+      return new PlayerActionsToHandleCardAction(
+        this._gameState,
+        playerId,
+        action.type
+      )
+    })
   }
 }
 
