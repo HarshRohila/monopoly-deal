@@ -1,4 +1,4 @@
-import { CardType, CardUtils, PropertyColor } from "../Card"
+import { Card, CardType, CardUtils, PropertyColor } from "../Card"
 import {
   ICanPlay,
   PropertyCard,
@@ -9,9 +9,14 @@ import {
 import { GameState } from "../MonopolyGame"
 import { PlayerUtils } from "../Player"
 import { CardPlayOptions } from "../types"
+import { GameStateUtils } from "../utils/GameStateUtils"
 
 class PlayerActions {
-  constructor(private gameState: GameState) {}
+  private gameStateUtils: GameStateUtils
+
+  constructor(private gameState: GameState) {
+    this.gameStateUtils = new GameStateUtils(gameState)
+  }
 
   get playerId() {
     return this.gameState.currentPlayer.playerId
@@ -34,15 +39,17 @@ class PlayerActions {
     playerUtils.drawCards(drawCount, this.gameState.deck)
   }
   playCard(cardIndex: number, options?: CardPlayOptions) {
-    const playableCard = this.getPlayableCard(cardIndex)
+    const card = this.getCardByIndex(cardIndex)
+
+    this.gameStateUtils.removeCardFromPlayer(card, this.getPlayer())
+
+    const playableCard = this.getPlayableCard(card)
 
     playableCard.playCard(options)
 
     this.currentPlayerState.remainingCardsToPlay -= 1
   }
-  private getPlayableCard(cardIndex: number): ICanPlay {
-    const player = this.getPlayer()
-    const card = player.cards[cardIndex]
+  private getPlayableCard(card: Card): ICanPlay {
     const cardUtils = new CardUtils(card)
 
     if (cardUtils.isMoneyCard()) {
@@ -54,6 +61,12 @@ class PlayerActions {
     } else if (card.type === CardType.Hotel) {
       return new HotelCard(card, this.gameState)
     }
+  }
+
+  private getCardByIndex(cardIndex: number) {
+    const player = this.getPlayer()
+    const card = player.cards[cardIndex]
+    return card
   }
 
   endTurn() {}

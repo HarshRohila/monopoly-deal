@@ -15,7 +15,6 @@ class HotelCard implements ICanPlay {
         ...this.card,
         meta: { ...this.card.meta, type: CardMetaType.Money },
       })
-      gameUtils.removeCardFromPlayer(this.card, currentPlayer)
     }
   }
 }

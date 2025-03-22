@@ -1,4 +1,3 @@
-import { CardPlayOptions } from "@/core/types"
 import { ICanPlay } from "./ICanPlay"
 import { Card } from "@/core/Card"
 import { GameState } from "@/core/MonopolyGame"
@@ -16,8 +15,6 @@ class GoPassCard implements ICanPlay {
     player.cards.push(...drawnCards)
     this.gameState.deck = deck.slice(2)
 
-    // Remove the Go Pass card from the player's hand
-    gameUtils.removeCardFromPlayer(this.card, player)
     // Add the Go Pass card to the discard pile
     this.gameState.discardPile.push(this.card)
   }

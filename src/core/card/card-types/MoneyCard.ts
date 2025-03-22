@@ -1,4 +1,3 @@
-import { CardPlayOptions } from "@/core/types"
 import { ICanPlay } from "./ICanPlay"
 import { Card } from "@/core/Card"
 import { GameState } from "@/core/MonopolyGame"
@@ -11,7 +10,6 @@ class MoneyCard implements ICanPlay {
     const player = gameUtils.getCurrentPlayer()
 
     player.moneyCards.push(this.card)
-    gameUtils.removeCardFromPlayer(this.card, player)
   }
 }
 
