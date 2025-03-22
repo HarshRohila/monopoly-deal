@@ -115,9 +115,7 @@ class CardUtils {
   constructor(private card: Card) {}
 
   isActionCard() {
-    return (
-      !this.isPropertyCard() && !this.isColorRentCard() && !this.isMoneyCard()
-    )
+    return !this.isPropertyCard() && !this.isMoneyCard()
   }
 
   isPropertyCard() {

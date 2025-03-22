@@ -9,7 +9,7 @@ describe("Game cards", () => {
       (acc, card) => acc + (new CardUtils(card).isActionCard() ? 1 : 0),
       0
     )
-    expect(actionCardsCount).toBe(34)
+    expect(actionCardsCount).toBe(47)
   })
 
   test("game having 37 property cards", () => {
