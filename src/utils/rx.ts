@@ -1,1 +1,1 @@
-export { Observable, Subject, take } from "rxjs"
+export { Observable, Subject, take, map, BehaviorSubject } from "rxjs"

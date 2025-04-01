@@ -3,6 +3,7 @@ import { createPlayer, Player } from "./Player"
 import { PlayerActions } from "./player/PlayerActions"
 import { MAX_CARDS_TO_PLAY_IN_ONE_TURN } from "@/constants"
 import { PlayerActionsToHandleCardAction } from "./player/PlayerActionsToHandleCardAction"
+import { Subject } from "@/utils/rx"
 
 interface PlayerAction {
   type: CardType
@@ -72,6 +73,9 @@ class MonopolyGame {
       )
     })
   }
+
+  gameStateChanged$ = new Subject<void>()
 }
 
 export { MonopolyGame, GameState }
+export { MonopolyGame as Game }
